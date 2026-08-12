@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Solving - Micro-Learning</title>
+    <!-- استدعاء مكتبة الأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b1120;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Slide Container */
+        .slide {
+            display: none; 
+            width: 100vw;
+            height: 100vh;
+            padding: 50px 50px 150px 50px; 
+            box-sizing: border-box;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex; 
+        }
+
+        /* Video Background */
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.35; 
+        }
+
+        /* Content Box */
+        .content-box {
+            background: rgba(15, 23, 42, 0.85);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #3b82f6;
+            max-width: 800px;
+            width: 100%;
+            z-index: 10;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+            text-align: left;
+        }
+
+        .content-box.center-text {
+            text-align: center;
+        }
+
+        h1 { color: #60a5fa; margin-top: 0; font-size: 2.5em; }
+        h2 { color: #93c5fd; font-weight: 300; border-bottom: 1px solid #3b82f6; padding-bottom: 10px; }
+        p, li { font-size: 1.2em; line-height: 1.6; }
+        
+        /* Navigation Controls */
+        .controls {
+            position: absolute;
+            bottom: 130px; 
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover { background: #1d4ed8; box-shadow: 0 0 10px #3b82f6; }
+
+        /* Quiz Styling */
+        .quiz-item { margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;}
+        select { padding: 8px; font-size: 16px; border-radius: 5px; background: #1e293b; color: white; border: 1px solid #3b82f6; margin-left: 10px;}
+        .feedback { margin-top: 15px; font-weight: bold; font-size: 1.2em; text-align: center; }
+        .correct { color: #4ade80; }
+        .incorrect { color: #f87171; }
+        
+        /* MCQ Styling */
+        .mcq-option { display: block; margin: 10px 0; cursor: pointer; font-size: 1.1em;}
+        input[type="radio"] { transform: scale(1.3); margin-right: 10px; }
+
+        /* Timer Display (Top Right) */
+        #timer-display {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #f87171;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid #ef4444;
+            display: none; 
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+            font-family: monospace;
+        }
+
+        /* Consultant Signature (Bottom Right) */
+        #consultant-signature {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            z-index: 1000;
+            text-align: left;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            font-size: 0.9em;
+            line-height: 1.6;
+            backdrop-filter: blur(5px);
+        }
+        #consultant-signature .name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0;
+            display: block;
+            letter-spacing: 1px;
+        }
+        #consultant-signature .title {
+            font-size: 1em;
+            color: #93c5fd;
+            margin-bottom: 8px;
+            display: block;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 5px;
+        }
+        #consultant-signature .contact-info {
+            color: #e2e8f0;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        #consultant-signature .contact-info i {
+            color: #60a5fa;
+            width: 16px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        #consultant-signature a {
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        #consultant-signature a:hover {
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Consultant Signature Component -->
+    <div id="consultant-signature">
+        <span class="name">Abdelhay Fahmy</span>
+        <span class="title">Training Consultant</span>
+        <div class="contact-info">
+            <i class="fas fa-envelope"></i> 
+            <a href="mailto:abdelhay.mamdouh@gmail.com">abdelhay.mamdouh@gmail.com</a>
+        </div>
+        <div class="contact-info">
+            <i class="fas fa-phone-alt"></i> 
+            <a href="tel:+201272331066">+201272331066</a>
+        </div>
+        <div class="contact-info">
+            <i class="fab fa-linkedin"></i> 
+            <a href="https://www.linkedin.com/in/abdelhayfahmy" target="_blank">linkedin.com/in/abdelhayfahmy</a>
+        </div>
+    </div>
+
+    <!-- Timer Component -->
+    <div id="timer-display">00:00</div>
+
+    <!-- Slide 1: Introduction -->
+    <div class="slide active" id="slide1">
+        <audio id="audio1" src="audio1.mp3"></audio>
+        <div class="content-box center-text">
+            <h1>Problem Solving</h1>
+            <h2>Beyond Symptoms – The Root Cause Approach</h2>
+            <p>Welcome to this micro-learning module.</p>
+            <ul style="text-align: left; display: inline-block;">
+                <li>Not just putting out daily fires.</li>
+                <li>Systematic identification of root causes.</li>
+                <li>Eliminating problems permanently.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 2: Case Study (Video 1 here) -->
+    <div class="slide" id="slide2">
+        <div class="video-container"><video id="vid1" src="vid1.mp4" autoplay loop muted></video></div>
+        <audio id="audio2" src="audio2.mp3"></audio>
+        <div class="content-box">
+            <h1>The Business Reality</h1>
+            <h2>Patient discharge delays and beyond</h2>
+            <p>Patient delays are just one example of daily business challenges.</p>
+            <ul>
+                <li>Stop treating surface symptoms (like just calming the patient).</li>
+                <li>Target the Root Cause to formulate a lasting solution.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 3: Fishbone Intro -->
+    <div class="slide" id="slide3">
+        <audio id="audio3" src="audio3.mp3"></audio>
+        <div class="content-box center-text">
+            <h1>The Solution: Fishbone Diagram</h1>
+            <h2>(Ishikawa Diagram)</h2>
+            <p>A powerful visual framework to brainstorm and categorize potential causes systematically.</p>
+            <p>Maps out the entire process until the true root cause is exposed, eliminating guesswork.</p>
+        </div>
+    </div>
+
+    <!-- Slide 4: 4 Branches (Video 2 here) -->
+    <div class="slide" id="slide4">
+        <div class="video-container"><video id="vid2" src="vid2.mp4" autoplay loop muted></video></div>
+        <audio id="audio4" src="audio4.mp3"></audio>
+        <div class="content-box">
+            <h1>The 4 Core Branches</h1>
+            <h2>Breaking down the patient delay problem:</h2>
+            <ul>
+                <li><strong>People:</strong> Is the new staff fully trained?</li>
+                <li><strong>Process:</strong> Are the discharge approval steps too complicated?</li>
+                <li><strong>Equipment:</strong> Is the billing software crashing again?</li>
+                <li><strong>Environment:</strong> Is chaotic noise slowing down communication?</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 5: Knowledge Check 1 (Timer: 2 Mins) -->
+    <div class="slide" id="slide5">
+        <audio id="audio5" src="audio5.mp3"></audio>
+        <div class="content-box" style="overflow-y: auto; max-height: 60vh;">
+            <h1>Knowledge Check: Categorize</h1>
+            <p>Scenario: High rate of dropped calls in the appointment center.</p>
+            
+            <div class="quiz-item">
+                <label>1. Staff doesn't know how to use the new system.</label>
+                <select id="q1_1">
+                    <option value="">Select Branch...</option>
+                    <option value="People">People</option><option value="Process">Process</option><option value="Equipment">Equipment</option><option value="Environment">Environment</option>
+                </select>
+            </div>
+            
+            <div class="quiz-item">
+                <label>2. The script they must read is too long.</label>
+                <select id="q1_2">
+                    <option value="">Select Branch...</option><option value="People">People</option><option value="Process">Process</option><option value="Equipment">Equipment</option><option value="Environment">Environment</option>
+                </select>
+            </div>
+
+            <div class="quiz-item">
+                <label>3. The call routing server keeps crashing.</label>
+                <select id="q1_3">
+                    <option value="">Select Branch...</option><option value="People">People</option><option value="Process">Process</option><option value="Equipment">Equipment</option><option value="Environment">Environment</option>
+                </select>
+            </div>
+
+            <div class="quiz-item">
+                <label>4. High background noise in the call center.</label>
+                <select id="q1_4">
+                    <option value="">Select Branch...</option><option value="People">People</option><option value="Process">Process</option><option value="Equipment">Equipment</option><option value="Environment">Environment</option>
+                </select>
+            </div>
+
+            <button onclick="checkQuiz1()" style="margin-top: 10px; width: 100%;">Submit Answers</button>
+            <div id="feedback1" class="feedback"></div>
+        </div>
+    </div>
+
+    <!-- Slide 6: 5 Whys -->
+    <div class="slide" id="slide6">
+        <audio id="audio6" src="audio6.mp3"></audio>
+        <div class="content-box center-text">
+            <h1>The 5 Whys Technique</h1>
+            <h2>Drilling down to the Root Cause</h2>
+            <p>Ask "Why?" repeatedly (typically 5 times) to peel back the layers.</p>
+            <p><strong>Example:</strong> Why did the server crash? ➔ Why wasn't it updated? ➔ <em>(Root Cause Discovered)</em></p>
+        </div>
+    </div>
+
+    <!-- Slide 7: Knowledge Check 2 (Timer: 3 Mins) -->
+    <div class="slide" id="slide7">
+        <audio id="audio7" src="audio7.mp3"></audio>
+        <div class="content-box" style="overflow-y: auto; max-height: 60vh;">
+            <h1>Knowledge Check: Drill Down</h1>
+            <p>Task: Sequence these events from Surface Problem (1) to Root Cause (5).</p>
+            
+            <div class="quiz-item">
+                <select id="q2_1"><option value="">Order</option><option value="1">1 (Top)</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5 (Root)</option></select>
+                <label> The server memory overloaded.</label>
+            </div>
+            <div class="quiz-item">
+                <select id="q2_2"><option value="">Order</option><option value="1">1 (Top)</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5 (Root)</option></select>
+                <label> A new update was installed during peak hours.</label>
+            </div>
+            <div class="quiz-item">
+                <select id="q2_3"><option value="">Order</option><option value="1">1 (Top)</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5 (Root)</option></select>
+                <label> The call routing server crashed.</label>
+            </div>
+            <div class="quiz-item">
+                <select id="q2_4"><option value="">Order</option><option value="1">1 (Top)</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5 (Root)</option></select>
+                <label> There is no standard policy for system updates.</label>
+            </div>
+            <div class="quiz-item">
+                <select id="q2_5"><option value="">Order</option><option value="1">1 (Top)</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5 (Root)</option></select>
+                <label> The IT team didn't schedule a maintenance window.</label>
+            </div>
+
+            <button onclick="checkQuiz2()" style="margin-top: 10px; width: 100%;">Submit Sequence</button>
+            <div id="feedback2" class="feedback"></div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Recap -->
+    <div class="slide" id="slide8">
+        <audio id="audio8" src="audio8.mp3"></audio>
+        <div class="content-box">
+            <h1>Quick Recap</h1>
+            <h2>Before the Final Assessment</h2>
+            <ul>
+                <li><strong>Focus:</strong> Treat the Root Cause, not just symptoms.</li>
+                <li><strong>Fishbone (Ishikawa):</strong> Map the problem across 4 core areas (People, Process, Equipment, Environment).</li>
+                <li><strong>The 5 Whys:</strong> Drill down layer by layer until you find the ultimate failure point.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 9: Final Assessment (Timer: 4 Mins) -->
+    <div class="slide" id="slide9">
+        <audio id="audio9" src="audio9.mp3"></audio>
+        <div class="content-box" style="overflow-y: auto; max-height: 65vh;">
+            <h1>Final Assessment</h1>
+            
+            <div class="quiz-item">
+                <strong>1. Effective problem solving is primarily about treating symptoms quickly.</strong><br>
+                <label class="mcq-option"><input type="radio" name="f1" value="wrong"> True</label>
+                <label class="mcq-option"><input type="radio" name="f1" value="correct"> False</label>
+            </div>
+
+            <div class="quiz-item">
+                <strong>2. What is another name for the Fishbone Diagram?</strong><br>
+                <label class="mcq-option"><input type="radio" name="f2" value="wrong"> Pareto Chart</label>
+                <label class="mcq-option"><input type="radio" name="f2" value="correct"> Ishikawa Diagram</label>
+                <label class="mcq-option"><input type="radio" name="f2" value="wrong"> Root Cause Matrix</label>
+            </div>
+
+            <div class="quiz-item">
+                <strong>3. Which is NOT one of the 4 core branches?</strong><br>
+                <label class="mcq-option"><input type="radio" name="f3" value="wrong"> Environment</label>
+                <label class="mcq-option"><input type="radio" name="f3" value="wrong"> Process</label>
+                <label class="mcq-option"><input type="radio" name="f3" value="correct"> Profit</label>
+            </div>
+            
+            <div class="quiz-item">
+                <strong>4. A chaotic, noisy ward falls under which branch?</strong><br>
+                <label class="mcq-option"><input type="radio" name="f4" value="wrong"> People</label>
+                <label class="mcq-option"><input type="radio" name="f4" value="correct"> Environment</label>
+                <label class="mcq-option"><input type="radio" name="f4" value="wrong"> Equipment</label>
+            </div>
+
+            <div class="quiz-item">
+                <strong>5. Primary purpose of the 5 Whys?</strong><br>
+                <label class="mcq-option"><input type="radio" name="f5" value="wrong"> Find 5 solutions</label>
+                <label class="mcq-option"><input type="radio" name="f5" value="correct"> Peel back layers to the root</label>
+            </div>
+
+            <div class="quiz-item">
+                <strong>6. When do you stop asking "Why"?</strong><br>
+                <label class="mcq-option"><input type="radio" name="f6" value="wrong"> Exactly after 5 times</label>
+                <label class="mcq-option"><input type="radio" name="f6" value="correct"> When reaching a fundamental system/policy failure</label>
+            </div>
+
+            <button onclick="checkFinal()" style="margin-top: 10px; width: 100%;">Submit Final Exam</button>
+            <div id="feedback3" class="feedback"></div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Congratulations -->
+    <div class="slide" id="slide10">
+        <audio id="audio10" src="audio10.mp3"></audio>
+        <div class="content-box center-text">
+            <h1 style="color: #4ade80; font-size: 3em;">Congratulations!</h1>
+            <h2>You've Mastered Fishbone & Five Whys Techniques</h2>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="controls">
+        <button onclick="prevSlide()" id="prevBtn" style="display: none;">Previous</button>
+        <button onclick="nextSlide()" id="nextBtn">Start Presentation</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+        let hasStarted = false; 
+        
+        let timerInterval = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updateSlides(); 
+        });
+
+        function playMedia(slideNum) {
+            document.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
+            document.querySelectorAll('video').forEach(v => { v.pause(); v.currentTime = 0; });
+
+            let audio = document.getElementById('audio' + slideNum);
+            if (audio) { audio.play().catch(e => console.log("Audio waiting")); }
+
+            let activeVideo = null;
+            if (slideNum === 2) {
+                activeVideo = document.getElementById('vid1');
+            } else if (slideNum === 4) {
+                activeVideo = document.getElementById('vid2');
+            }
+
+            if (activeVideo) {
+                activeVideo.play().catch(e => console.log("Video waiting"));
+            }
+        }
+
+        // Logic for Timer Display and Countdown
+        function startTimer(durationInSeconds, reviewSlideIndex) {
+            clearInterval(timerInterval);
+            let time = durationInSeconds;
+            let display = document.getElementById('timer-display');
+            display.style.display = 'block';
+            
+            timerInterval = setInterval(() => {
+                let min = Math.floor(time / 60);
+                let sec = time % 60;
+                display.innerText = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
+                
+                if (time <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time is up! Returning to review the explanation.");
+                    currentSlide = reviewSlideIndex;
+                    updateSlides();
+                }
+                time--;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('timer-display').style.display = 'none';
+        }
+
+        function updateSlides() {
+            document.querySelectorAll('.slide').forEach((s, index) => {
+                s.classList.remove('active');
+                if (index + 1 === currentSlide) {
+                    s.classList.add('active');
+                }
+            });
+
+            document.getElementById('prevBtn').style.display = currentSlide === 1 ? 'none' : 'block';
+
+            let nextBtn = document.getElementById('nextBtn');
+            
+            if (!hasStarted) {
+                nextBtn.innerText = "Start Presentation";
+            } else {
+                nextBtn.innerText = "Next";
+            }
+
+            if (currentSlide === 5 || currentSlide === 7 || currentSlide === 9 || currentSlide === totalSlides) {
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'block';
+            }
+
+            stopTimer();
+            if (hasStarted) {
+                if (currentSlide === 5) {
+                    startTimer(120, 4); 
+                } else if (currentSlide === 7) {
+                    startTimer(180, 6); 
+                } else if (currentSlide === 9) {
+                    startTimer(240, 8); 
+                }
+                
+                playMedia(currentSlide);
+            }
+        }
+
+        function nextSlide() {
+            if (!hasStarted) {
+                hasStarted = true;
+                updateSlides();
+                return; 
+            }
+
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlides();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlides();
+            }
+        }
+
+        function checkQuiz1() {
+            let q1 = document.getElementById('q1_1').value === 'People';
+            let q2 = document.getElementById('q1_2').value === 'Process';
+            let q3 = document.getElementById('q1_3').value === 'Equipment';
+            let q4 = document.getElementById('q1_4').value === 'Environment';
+            
+            let fb = document.getElementById('feedback1');
+            if(q1 && q2 && q3 && q4) {
+                stopTimer();
+                fb.innerHTML = "<span class='correct'>✔ Excellent! All perfectly categorized. You may proceed.</span>";
+                document.getElementById('nextBtn').style.display = 'block'; 
+            } else {
+                alert("Incorrect! Returning to review the explanation.");
+                currentSlide = 4; 
+                updateSlides();
+            }
+        }
+
+        function checkQuiz2() {
+            let ans1 = document.getElementById('q2_1').value === '2';
+            let ans2 = document.getElementById('q2_2').value === '3';
+            let ans3 = document.getElementById('q2_3').value === '1';
+            let ans4 = document.getElementById('q2_5').value === '4';
+            let ans5 = document.getElementById('q2_4').value === '5';
+
+            let fb = document.getElementById('feedback2');
+            if(ans1 && ans2 && ans3 && ans4 && ans5) {
+                stopTimer();
+                fb.innerHTML = "<span class='correct'>✔ Brilliant! You found the true Root Cause. You may proceed.</span>";
+                document.getElementById('nextBtn').style.display = 'block';
+            } else {
+                alert("Incorrect! Returning to review the explanation.");
+                currentSlide = 6; 
+                updateSlides();
+            }
+        }
+
+        function checkFinal() {
+            let score = 0;
+            for(let i=1; i<=6; i++) {
+                let selected = document.querySelector(`input[name="f${i}"]:checked`);
+                if(selected && selected.value === 'correct') {
+                    score++;
+                }
+            }
+            
+            let fb = document.getElementById('feedback3');
+            if(score === 6) {
+                stopTimer();
+                currentSlide = 10;
+                updateSlides();
+            } else {
+                alert("Incorrect answers found! Returning to review the explanation.");
+                currentSlide = 8; 
+                updateSlides();
+            }
+        }
+    </script>
+</body>
+</html>
