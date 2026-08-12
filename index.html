@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Problem Solving - Micro-Learning</title>
-    <!-- استدعاء مكتبة الأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* General Styling */
@@ -179,33 +178,33 @@
             color: #60a5fa;
         }
 
-        /* --- تصميم متجاوب للموبايل (Mobile Responsive Design) --- */
+        /* --- تصميم متجاوب للموبايل (Mobile Portrait) --- */
         @media (max-width: 768px) {
             .slide { 
-                padding: 20px 15px 160px 15px; /* زيادة المساحة في الأسفل للموبايل */
+                padding: 20px 15px 190px 15px; /* مساحة أكبر تحت لتجنب التغطية */
             } 
             .content-box { 
                 padding: 20px; 
-                max-height: 48vh; /* تقليل الارتفاع لتشغيل السكرول وعدم تغطية الكارت */
+                max-height: 52vh; /* ضمان وجود Scroll إذا زاد المحتوى */
+                overflow-y: auto;
             } 
             h1 { font-size: 1.6em; }
             h2 { font-size: 1.1em; }
             p, li, .quiz-item, label { font-size: 0.9em; line-height: 1.4; }
             
             .controls { 
-                bottom: 110px; /* رفع أزرار التحكم قليلاً */
+                bottom: 110px; /* رفع الأزرار أعلى الكارت بمسافة أمان */
             }
             button { 
                 padding: 10px 15px; 
                 font-size: 15px; 
             }
 
-            /* تحويل الكارت لفوتر أسفل الشاشة */
             #consultant-signature {
                 bottom: 10px;
                 right: 10px;
                 left: 10px;
-                padding: 10px;
+                padding: 8px;
                 border-left: none;
                 border-top: 3px solid #3b82f6;
                 text-align: center;
@@ -216,18 +215,47 @@
             #consultant-signature .title { 
                 font-size: 0.85em; 
                 border-bottom: 1px solid #1e293b; 
-                padding-bottom: 5px; 
-                margin-bottom: 5px; 
+                padding-bottom: 3px; 
+                margin-bottom: 3px; 
             }
             #consultant-signature .contact-info { 
-                display: inline-block; /* جعل بيانات التواصل بجانب بعضها */
-                margin: 0 5px; 
+                display: inline-block; 
+                margin: 0 4px; 
                 font-size: 0.75em; 
             }
             #timer-display {
                 top: 10px;
                 right: 10px;
                 font-size: 18px;
+                padding: 5px 10px;
+            }
+        }
+
+        /* --- حل مشكلة دوران الشاشة (Mobile Landscape) --- */
+        @media (max-height: 500px) {
+            .slide { 
+                padding: 10px 10px 60px 10px; /* تقليل الهوامش لتوفير مساحة */
+            }
+            .content-box {
+                max-height: 65vh;
+                padding: 15px;
+                overflow-y: auto;
+            }
+            .controls {
+                bottom: 10px; /* نقل الأزرار للأسفل */
+                left: auto;
+                right: 20px;
+                transform: none; /* إلغاء التوسيط ووضعها يمين */
+            }
+            /* إخفاء الكارت تماماً في وضع الدوران لعدم حجب الأسئلة */
+            #consultant-signature {
+                display: none; 
+            }
+            #timer-display {
+                top: 10px;
+                left: 10px; /* نقل العداد يساراً */
+                right: auto;
+                font-size: 16px;
                 padding: 5px 10px;
             }
         }
@@ -316,7 +344,7 @@
     <!-- Slide 5: Knowledge Check 1 (Timer: 2 Mins) -->
     <div class="slide" id="slide5">
         <audio id="audio5" src="audio5.mp3"></audio>
-        <div class="content-box" style="overflow-y: auto; max-height: 50vh;">
+        <div class="content-box">
             <h1>Knowledge Check: Categorize</h1>
             <p>Scenario: High rate of dropped calls in the appointment center.</p>
             
@@ -368,7 +396,7 @@
     <!-- Slide 7: Knowledge Check 2 (Timer: 3 Mins) -->
     <div class="slide" id="slide7">
         <audio id="audio7" src="audio7.mp3"></audio>
-        <div class="content-box" style="overflow-y: auto; max-height: 50vh;">
+        <div class="content-box">
             <h1>Knowledge Check: Drill Down</h1>
             <p>Task: Sequence these events from Surface Problem (1) to Root Cause (5).</p>
             
@@ -415,7 +443,7 @@
     <!-- Slide 9: Final Assessment (Timer: 4 Mins) -->
     <div class="slide" id="slide9">
         <audio id="audio9" src="audio9.mp3"></audio>
-        <div class="content-box" style="overflow-y: auto; max-height: 55vh;">
+        <div class="content-box">
             <h1>Final Assessment</h1>
             
             <div class="quiz-item">
