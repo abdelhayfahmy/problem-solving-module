@@ -1,23 +1,35 @@
-Project Title: Problem Solving & Root Cause Analysis - Interactive Micro-Learning Module
-Role: Instructional Designer & Training Consultant
+![Problem Solving Mastery](thumb.png)
 
-Overview:
-A responsive, multimedia-rich micro-learning module designed to train professionals in advanced problem-solving methodologies. The module focuses on shifting mindsets from treating surface-level symptoms to identifying and eliminating root causes using industry-standard frameworks.
+# Problem Solving Mastery: Strategic Thinking & Decision Making
 
-Instructional Methodologies Applied:
+**An Interactive Corporate Learning & Development Module**
+*Developed by Abdelhay Fahmy | L&D Consultant*
 
-The Ishikawa (Fishbone) Diagram: Categorizing root causes across People, Process, Equipment, and Environment.
+[![Live Demo](https://img.shields.io/badge/View-Live%20Demo-F97316?style=for-the-badge&logo=github)](https://abdelhayfahmy.github.io/problem-solving-module/)
 
-The 5 Whys Technique: Sequential root-cause analysis applied to realistic operational case studies (e.g., patient discharge delays and call center technical failures).
+## 📌 Project Overview
+The **Problem Solving Mastery** module is an immersive, browser-based corporate training presentation. Designed to elevate critical thinking and strategic decision-making, it moves beyond static slides by offering interactive scenarios, real-time assessments, and practical methodologies. This project serves as a showcase of modern instructional design, blending gamified learning with seamless back-end data tracking.
 
-Technical Features & Interactivity:
+## 🎯 Key Learning Objectives
+By completing this module, professionals will be able to:
+* **Define the Core Issue:** Accurately separate symptoms from root causes in complex business environments.
+* **Analyze Strategically:** Apply proven frameworks (such as the 5 Whys and Fishbone diagrams) for deep Root Cause Analysis (RCA).
+* **Develop Solutions:** Brainstorm, evaluate, and prioritize strategic solutions based on impact and feasibility.
+* **Execute & Monitor:** Implement structured action plans and establish metrics to measure success and prevent recurrence.
 
-Custom HTML5/JS Architecture: Built entirely without standard authoring tools to ensure maximum flexibility and lightweight performance.
+## 🚀 Technical Features & Innovations
+* **Interactive Simulations:** Scenario-based challenges that require learners to apply problem-solving frameworks before progressing.
+* **Real-Time Assessment & Feedback:** Built-in evaluations that measure knowledge retention instantly, ensuring learning objectives are met.
+* **Automated L&D Data Tracking:** 
+  * A seamless front-end data capture system.
+  * Back-end integration via **Google Apps Script** to automatically transmit completion rates, scores, and learner insights directly to a Google Sheet.
+* **Responsive Corporate UI:** A sleek, distraction-free interface utilizing HTML/CSS/JavaScript with glassmorphism aesthetics and dynamic animations, reflecting the premium *L&D Deep Dive* brand identity.
 
-Multimedia Integration: Synchronized professional voiceovers and video backgrounds to enhance learner retention (Multimedia Principle).
+## 🛠️ Built With
+* **HTML5 / CSS3 / Vanilla JavaScript**
+* **FontAwesome** (Icons)
+* **Google Fonts** (Poppins)
+* **Google Apps Script API** (For data collection and L&D reporting)
 
-Adaptive Assessments: Features logic-based routing where incorrect answers trigger automatic remediation, sending the learner back to review specific instructional slides.
-
-Timed Quizzes: Dynamic countdown timers (2 to 4 minutes) applied to knowledge checks to simulate business urgency.
-
-🔗 Live Demo:https://github.com/abdelhayfahmy
+---
+*For inquiries regarding instructional design, corporate training modules, or strategic L&D consultation, please connect via [LinkedIn](https://www.linkedin.com/in/abdelhayfahmy) or visit the [L&D Deep Dive Page](https://www.linkedin.com/company/110834128/admin/).*
